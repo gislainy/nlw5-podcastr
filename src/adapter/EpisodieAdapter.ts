@@ -4,10 +4,10 @@ import ptBr from "date-fns/locale/pt-BR";
 
 import { convertDurationToTimeString } from "../utils/convertDurationToTimeString";
 
-import { Episodie } from './../entity/Episodie';
+import { Episode } from '../entity/Episode';
 
 
-export function EpisodieAdapter(episode): Episodie {
+export function EpisodieAdapter(episode): Episode {
     return {
         id: episode.id,
         title: episode.title,

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { EpisodieAdapter } from "../../adapter/EpisodieAdapter";
 import { api } from "../../components/api";
-import { Episode } from "../../entity/Episodie";
+import { Episode } from "../../entity/Episode";
 
 import styles from "./episodes.module.scss"
 
@@ -15,6 +15,12 @@ type EpisodieProps = {
 export default function Episodes({ episodie }: EpisodieProps) {
     const router = useRouter();
 
+    if (router.isFallback) {
+        return (
+            <p>Carregando</p>
+        )
+    }
+    
     return (
         <div className={styles.episode}>
             <div className={styles.thumbnailContainer}>
@@ -51,8 +57,24 @@ export default function Episodes({ episodie }: EpisodieProps) {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+
+    const paths = await api.get("/episodes", {
+        params: {
+          _limit: 2,
+          _sort: "published_at",
+          _order: "desc"
+        }
+      })
+        .then(res => res.data)
+        .then(episodes => episodes.map(episode => {
+            return {
+                params: {
+                    slug: episode.id
+                }
+            }
+        }));
     return {
-        paths: [],
+        paths: paths,
         fallback: "blocking"
     }
 }
