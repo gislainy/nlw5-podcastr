@@ -2,17 +2,20 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { EpisodieAdapter } from "../../adapter/EpisodieAdapter";
+import { EpisodeAdapter } from "../../adapter/EpisodieAdapter";
 import { api } from "../../components/api";
+import { userPlayer } from "../../contexts/PlayerContext";
 import { Episode } from "../../entity/Episode";
 
 import styles from "./episodes.module.scss"
 
-type EpisodieProps = {
-    episodie: Episode
+type episodeProps = {
+    episode: Episode
 }
 
-export default function Episodes({ episodie }: EpisodieProps) {
+export default function Episodes({ episode }: episodeProps) {
+
+    const { play } = userPlayer();
     const router = useRouter();
 
     if (router.isFallback) {
@@ -32,23 +35,23 @@ export default function Episodes({ episodie }: EpisodieProps) {
                 <Image
                     width={700}
                     height={320}
-                    src={episodie.thumbnail}
+                    src={episode.thumbnail}
                     objectFit="cover"
                 />
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                     <img src="/play.svg" alt="Tocar episodio" />
                 </button>
             </div>
 
             <header>
-                <h1>{episodie.title}</h1>
-                <span>{episodie.members}</span>
-                <span>{episodie.publishedAt}</span>
-                <span>{episodie.durationAsString}</span>
+                <h1>{episode.title}</h1>
+                <span>{episode.members}</span>
+                <span>{episode.publishedAt}</span>
+                <span>{episode.durationAsString}</span>
             </header>
 
             <div className={styles.description}
-                dangerouslySetInnerHTML={{ __html: episodie.description }}
+                dangerouslySetInnerHTML={{ __html: episode.description }}
             >
 
             </div>
@@ -81,14 +84,14 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
 
-    const episodie = await api
+    const episode = await api
         .get(`/episodes/${ctx.params.slug}`)
         .then(res => res.data)
-        .then(EpisodieAdapter)
+        .then(EpisodeAdapter)
 
     return {
         props: {
-            episodie
+            episode
         },
         revalidate: 60 * 60 * 24,
     }

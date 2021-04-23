@@ -7,5 +7,5 @@ export type Episode = {
     url: string;
     publishedAt: string;
     durationAsString: string;
-    duration: Number;
+    duration: number;
 }

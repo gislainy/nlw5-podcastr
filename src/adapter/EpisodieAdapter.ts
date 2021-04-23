@@ -7,7 +7,7 @@ import { convertDurationToTimeString } from "../utils/convertDurationToTimeStrin
 import { Episode } from '../entity/Episode';
 
 
-export function EpisodieAdapter(episode): Episode {
+export function EpisodeAdapter(episode): Episode {
     return {
         id: episode.id,
         title: episode.title,
