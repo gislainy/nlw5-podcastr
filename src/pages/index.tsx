@@ -7,6 +7,8 @@ import { Episode } from "../entity/Episode";
 
 import styles from "./home.module.scss";
 import { EpisodieAdapter } from "../adapter/EpisodieAdapter";
+import { useContext } from "react";
+import { PlayerContext } from "../contexts/PlayerContext";
 
 
 type HomeProps = {
@@ -16,6 +18,9 @@ type HomeProps = {
 
 
 export default function Home({ lastestEpisodes, allEpisodes }: HomeProps) {
+
+  const { play } = useContext(PlayerContext);
+
   return (
     <div className={styles.homePage}>
       <section className={styles.lastestEpisodes}>
@@ -44,7 +49,7 @@ export default function Home({ lastestEpisodes, allEpisodes }: HomeProps) {
                   <span>{episode.duration}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(episode)}>
                   <img src="/play-green.svg" alt="Tocar episodio" />
                 </button>
               </li>
@@ -89,7 +94,7 @@ export default function Home({ lastestEpisodes, allEpisodes }: HomeProps) {
                   <td style={{ width: 100 }}>{episode.publishedAt}</td>
                   <td>{episode.durationAsString}</td>
                   <td>
-                    <button>
+                    <button type="button" onClick={() => play(episode)}>
                       <img src="/play-green.svg" alt="Tocar episodio" />
                     </button>
                   </td>
